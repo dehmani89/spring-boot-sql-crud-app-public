@@ -333,6 +333,6 @@ The project includes a complete CI/CD pipeline using AWS services:
 
 ## 📄 License
 
-Feel free to use the boilerplate code, and if you need any help setting this up locally to play with, send me an email :)
+Feel free to use the boilerplate code, and if you need any help setting this up locally to play with, send me an email amine.dehmani@gmail.com :)
 
 This project is licensed under the MIT License.
