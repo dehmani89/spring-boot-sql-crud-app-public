@@ -14,8 +14,8 @@ spring:
   # Database Configuration
   # Uses environment variables with fallback defaults for local development
   datasource:
-    username: ${DB_USERNAME:aminedehmani}  # DB user - set via ECS environment variable
-    password: ${DB_PASSWORD:Azerty89!}  # DB password - set via ECS environment variable
+    username: ${DB_USERNAME:USERNAME_HERE}  # DB user - set via ECS environment variable
+    password: ${DB_PASSWORD:PASSWORD_HERE}  # DB password - set via ECS environment variable
 #    url: ${DB_URL:jdbc:postgresql://stock-app-db.cemupq078xab.us-east-1.rds.amazonaws.com:5432/stocks}  # AWS RDS endpoint
     url: ${DB_URL:jdbc:postgresql://localhost:5432/stocks}  # Local Host for development
 
