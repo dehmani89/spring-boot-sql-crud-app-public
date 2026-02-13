@@ -1,0 +1,191 @@
+{
+	"info": {
+		"name": "Stock API Collection",
+		"description": "Complete API test collection for Stock CRUD operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Get All Stocks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Stock by Ticker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/AAPL",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "AAPL"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Stock - Tesla",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticker\": \"TSLA\",\n  \"companyName\": \"Tesla Inc.\",\n  \"price\": 250.75,\n  \"description\": \"Electric vehicle and clean energy company\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Stock - Netflix",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticker\": \"NFLX\",\n  \"companyName\": \"Netflix Inc.\",\n  \"price\": 485.30,\n  \"description\": \"Streaming entertainment service\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Stock - Microsoft",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticker\": \"MSFT\",\n  \"companyName\": \"Microsoft Corporation\",\n  \"price\": 420.50,\n  \"description\": \"Updated: Technology corporation focused on cloud computing and productivity software\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/MSFT",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "MSFT"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Stock - Apple",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticker\": \"AAPL\",\n  \"companyName\": \"Apple Inc.\",\n  \"price\": 195.89,\n  \"description\": \"Updated: Consumer electronics and software company\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/AAPL",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "AAPL"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Stock - Tesla",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/TSLA",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "TSLA"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Non-Existent Stock (Error Test)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/INVALID",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "INVALID"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Non-Existent Stock (Error Test)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"ticker\": \"INVALID\",\n  \"companyName\": \"Invalid Company\",\n  \"price\": 100.00,\n  \"description\": \"This should fail\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/INVALID",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "INVALID"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Non-Existent Stock (Error Test)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/stocks/INVALID",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "stocks", "INVALID"]
+				}
+			},
+			"response": []
+		}
+	]
+}

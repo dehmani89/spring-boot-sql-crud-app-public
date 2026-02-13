@@ -1,0 +1,14 @@
+# Docker Compose version
+version: '3.8'
+
+# Define services (containers) to run
+services:
+  # Spring Boot application service definition
+  stock-app:
+    # Build image from Dockerfile in current directory
+    build: .
+    # Map container port 8080 to host port 8080
+    ports:
+      - "8080:8080"
+    # Set container name for easier reference
+    container_name: spring-boot-app

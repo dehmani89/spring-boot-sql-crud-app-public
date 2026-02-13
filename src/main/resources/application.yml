@@ -1,0 +1,40 @@
+# =============================================================================
+# Spring Boot Stock CRUD API Configuration
+# =============================================================================
+
+# Server Configuration
+server:
+  port: '8080'  # Application port - exposed in Docker container
+
+spring:
+  # Application Identity
+  application:
+    name: 'spring-boot-sql-crud-app'  # Application name for monitoring/logging
+  
+  # Database Configuration
+  # Uses environment variables with fallback defaults for local development
+  datasource:
+    username: ${DB_USERNAME:aminedehmani}  # DB user - set via ECS environment variable
+    password: ${DB_PASSWORD:Azerty89!}  # DB password - set via ECS environment variable
+#    url: ${DB_URL:jdbc:postgresql://stock-app-db.cemupq078xab.us-east-1.rds.amazonaws.com:5432/stocks}  # AWS RDS endpoint
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/stocks}  # Local Host for development
+
+  # JPA/Hibernate Configuration
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect  # PostgreSQL-specific SQL dialect
+    hibernate:
+      ddl-auto: update  # Auto-update database schema (use 'validate' in production)
+    show-sql: 'true'  # Log SQL queries (disable in production for performance)
+
+  # OKTA JWT Security Configuration
+  # Protects /api/stocks/** endpoints while keeping /api/basic/** public
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # OKTA authorization server URL - validates JWT tokens
+          issuer-uri: ${OKTA_ISSUER_URI:https://trial-4072718.okta.com/oauth2/ausxso09ryMtEqhOs697}
+          # Expected audience in JWT tokens - must match OKTA app configuration
+          audiences: ${OKTA_AUDIENCE:api://default}

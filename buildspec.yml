@@ -1,0 +1,65 @@
+# AWS CodeBuild buildspec file with inline documentation
+# This file defines the build phases and artifacts for CodeBuild.
+# See: https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+
+version: 0.2
+
+phases:
+  # pre_build runs before the primary build steps. Use this to install/login/setup credentials.
+  pre_build:
+    commands:
+      # Print a message to the build logs for clarity
+      - echo Logging in to Docker Hub...
+      # Login to Docker Hub using secure environment variables set in CodeBuild project settings
+      # Required env vars: DOCKER_HUB_USERNAME and DOCKER_HUB_PASSWORD
+      - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+      # Print a message for ECR login step
+      - echo Logging in to Amazon ECR...
+      # Print AWS CLI version to help debug environment issues
+      - aws --version
+      # REPOSITORY_URI is the ECR registry URI where images will be pushed.
+      # Replace this with your own ECR repository URI if different.
+      - REPOSITORY_URI=YOUR_REPOSTITORY_LINK_HERE
+      # Use the AWS CLI to get a temporary login password and authenticate Docker to ECR
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $REPOSITORY_URI
+      # Shorten the commit hash for tagging and logs (first 7 characters)
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      # Create a build-specific image tag using the CodeBuild build id. This helps identify images per build.
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+  # build contains the main steps to build the project and the Docker image.
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Current directory is $(pwd)
+      - echo Listing files in current directory
+      - ls -la
+      - echo Checking if Dockerfile exists
+      # Basic check to ensure a Dockerfile is present; helpful for debugging failures
+      - test -f Dockerfile && echo "Dockerfile found" || echo "Dockerfile NOT found"
+      - echo Building the Docker image...
+      # Build the Docker image and tag it with the ECR repo URI and the `latest` tag
+      - docker build -t $REPOSITORY_URI:latest .
+      # Also tag the image with a build-specific tag so previous builds remain identifiable
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  # post_build runs after the build steps; commonly used to push artifacts and write metadata files.
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      # Push both the `latest` and build-specific images to Amazon ECR
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      # Name of the container definition used by ECS Task Definitions / CodeDeploy
+      - DOCKER_CONTAINER_NAME=stock-app
+      # Create imagedefinitions.json which CodeDeploy/CodePipeline expects for ECS deployments
+      # Format: [{"name":"<container-name>","imageUri":"<ecr-uri>:<tag>"}]
+      - printf '[{"name":"%s","imageUri":"%s"}]' $DOCKER_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - echo $DOCKER_CONTAINER_NAME
+      - echo printing imagedefinitions.json
+      - cat imagedefinitions.json
+
+# Artifacts section declares files that CodeBuild should pass to later stages (e.g., CodeDeploy).
+artifacts:
+  files:
+    - imagedefinitions.json
